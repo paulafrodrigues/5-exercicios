@@ -5,6 +5,18 @@ const server = express();
 const usuariosLista = ['Paula', 'Thiele', 'Nataly'];
 const listaLivros = ['Harry Potter', 'Senhor dos Anéis', 'Crônicas Saxônicas'];
 
+function checkUsersInArray(req, res, next){
+    const usuario = usuariosLista[req.params.usuariosListaIndex];
+    if(!usuario){
+        return res.status(400).json({error: `Index doesn't exists`});
+    }
+    req.usuario = usuariosLista;
+    return next();         
+}
+    /*
+    ----- isso é uma função para checar a validade de um parametro!!! chama middleware -------
+    */
+
 //criar um GET com res de Hello World
 
 server.get('/', (req, res, next) => {
@@ -19,7 +31,7 @@ server.get('/usuarios', (req, res, next) =>{
 
 // Criar GET que te dê um usuário
 
-server.get('/usuarios/:usuariosListaIndex', (req, res, next) =>{
+server.get('/usuarios/:usuariosListaIndex', checkUsersInArray, /* checkUsersInArray, ---- para validar as informações do index, se o numero informado n existir, ele vai dar o erro 400 que está na função lá em cima */ (req, res, next) =>{
     const idUsuarios = req.params.usuariosListaIndex;
     const usuario = usuariosLista[idUsuarios];
     res.send(usuario);
@@ -39,6 +51,10 @@ server.get('/livros/:listaLivrosIndex', (req, res, next) =>{
     const livros = listaLivros[idLivros];
     res.send(livros);
 })
+
+/*server get('/usuarios
+
+*/
 
 // criar uma rota GET QUE UTILIZE 2 PARAMS E QUE RETORNE O USUÁRIO E O LIVRO
 
